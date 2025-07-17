@@ -54,7 +54,8 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect email or password")
     access_token = create_access_token(data={"sub": user.email})
-    return {"access_token": access_token, "token_type": "bearer"}
+    user_data = UserRead.from_orm(user)
+    return {"access_token": access_token, "token_type": "bearer", "user": user_data}
 
 @router.get("/me", response_model=UserRead)
 def read_users_me(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):

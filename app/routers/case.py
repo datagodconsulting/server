@@ -6,18 +6,9 @@ from app.models.case import Case
 from app.models.client import Client
 from app.database import SessionLocal
 from typing import List, Optional
+from app.constants.case_types import TypeList
 
 router = APIRouter(prefix="/cases", tags=["cases"])
-
-CASE_TYPES = [
-    "Family Law",
-    "Criminal Law",
-    "Civil Law",
-    "Corporate Law",
-    "Intellectual Property",
-    "Tax Law",
-    "Other"
-]
 
 def get_db():
     db = SessionLocal()
@@ -47,9 +38,9 @@ def list_cases(
 def get_cases_for_client(client_id: int, db: Session = Depends(get_db)):
     return db.query(Case).filter(Case.client_id == client_id).all()
 
-@router.get("/types", response_model=List[str])
+@router.get("/types")
 def get_case_types():
-    return CASE_TYPES
+    return TypeList
 
 @router.post("/", response_model=CaseRead)
 def create_new_case(case: CaseCreate, db: Session = Depends(get_db)):

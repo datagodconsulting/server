@@ -11,7 +11,7 @@ def create_advocate(db: Session, advocate: AdvocateCreate):
     return db_advocate
 
 def get_advocate(db: Session, advocate_id: int):
-    advocate = db.query(Advocate).filter(Advocate.id == advocate_id).first()
+    advocate = db.query(Advocate).filter(Advocate.advocate_id == advocate_id).first()
     if not advocate:
         raise HTTPException(status_code=404, detail="Advocate not found")
     return advocate
