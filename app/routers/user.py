@@ -20,7 +20,19 @@ def get_db():
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/login")
 
-@router.get("/", response_model=List[UserRead])
+# @router.get("/", response_model=List[UserRead])
+# def list_users(
+#     role: Optional[str] = Query(None),
+#     is_active: Optional[bool] = Query(None),
+#     db: Session = Depends(get_db)
+# ):
+#     query = db.query(User)
+#     if role:
+#         query = query.filter(User.role == role)
+#     if is_active is not None:
+#         query = query.filter(User.is_active == is_active)
+#     return query.all()
+@router.get("/")
 def list_users(
     role: Optional[str] = Query(None),
     is_active: Optional[bool] = Query(None),
@@ -31,7 +43,31 @@ def list_users(
         query = query.filter(User.role == role)
     if is_active is not None:
         query = query.filter(User.is_active == is_active)
-    return query.all()
+    users = query.all()
+    result = []
+    from app.models.advocate import Advocate
+    from app.models.client import Client
+    for user in users:
+        user_data = UserRead.from_orm(user).dict()
+        if user.role == "advocate":
+            advocate = db.query(Advocate).filter(Advocate.user_id == user.user_id).first()
+            if advocate:
+                user_data["advocate"] = {
+                    "advocate_id": advocate.advocate_id,
+                    "bar_council_id": advocate.bar_council_id,
+                    "specialization": advocate.specialization,
+                    "years_of_experience": advocate.years_of_experience,
+                    "location": advocate.location
+                }
+        elif user.role == "client":
+            client = db.query(Client).filter(Client.user_id == user.user_id).first()
+            if client:
+                user_data["client"] = {
+                    "client_id": client.client_id,
+                    "address": client.address
+                }
+        result.append(user_data)
+    return result
 
 @router.put("/{user_id}/approve", response_model=UserRead)
 def approve_user(user_id: int, db: Session = Depends(get_db)):
