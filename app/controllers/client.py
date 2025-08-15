@@ -11,7 +11,7 @@ def create_client(db: Session, client: ClientCreate):
     return db_client
 
 def get_client(db: Session, client_id: int):
-    client = db.query(Client).filter(Client.id == client_id).first()
+    client = db.query(Client).filter(Client.client_id == client_id).first()
     if not client:
         raise HTTPException(status_code=404, detail="Client not found")
     return client

@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
+from app.models.client import Client 
+from app.models.advocate import Advocate 
 from app.schemas.user import UserCreate, UserRead, UserLogin
 from app.controllers.user import create_user, authenticate_user, get_user_by_id, create_access_token
 from app.models.user import User
@@ -87,11 +89,20 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
 @router.post("/login")
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = authenticate_user(db, form_data.username, form_data.password)
+    print("USER", UserRead.from_orm(user))
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect email or password")
     access_token = create_access_token(data={"sub": user.email})
     user_data = UserRead.from_orm(user)
-    return {"access_token": access_token, "token_type": "bearer", "user": user_data}
+
+    extra_data = {}
+    if user.role == "client":
+        client = db.query(Client).filter(Client.user_id == user.user_id).first()
+        extra_data["client_id"] = client.client_id if client else None
+    elif user.role == "advocate":
+        advocate = db.query(Advocate).filter(Advocate.user_id == user.user_id).first()
+        extra_data["advocate_id"] = advocate.advocate_id if advocate else None
+    return {"access_token": access_token, "token_type": "bearer", "user": {**UserRead.from_orm(user).dict(), **extra_data}}
 
 @router.get("/me", response_model=UserRead)
 def read_users_me(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
