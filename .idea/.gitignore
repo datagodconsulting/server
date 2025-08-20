@@ -1,3 +1,48 @@
-# Default ignored files
-/shelf/
-/workspace.xml
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+env/
+venv/
+ENV/
+
+# Django stuff
+*.log
+db.sqlite3
+media/
+staticfiles/
+*.pot
+
+# Migrations (optional – keep if you want to track them)
+*/migrations/__pycache__/
+*/migrations/*.pyc
+*/migrations/*.pyo
+
+# IDE & editor settings
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Env files
+.env
+*.env
+
+# Coverage / testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Other tools
+.shelf/
+workspace.xml
