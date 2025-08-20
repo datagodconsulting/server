@@ -8,6 +8,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from app.controllers.user import authenticate_user, create_access_token
 from app.schemas.user import UserRead
 
+#advocate router
 router = APIRouter(prefix="/advocates", tags=["advocates"])
 
 def get_db():
