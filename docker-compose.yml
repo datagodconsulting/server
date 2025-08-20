@@ -20,13 +20,8 @@ services:
     volumes:
       - ./app:/app/app
     ports:
-      - "8000:8000"
+      - "8000:8000"   # 🔹 change this from 80:8000 to 8000:8000
     environment:
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_HOST=db
-      - MYSQL_PORT=3306
       - SECRET_KEY=${SECRET_KEY}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
@@ -38,4 +33,4 @@ services:
       - db
 
 volumes:
-  db_data: 
+  db_data:
