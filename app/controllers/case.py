@@ -11,7 +11,7 @@ def create_case(db: Session, case: CaseCreate):
     return db_case
 
 def get_case(db: Session, case_id: int):
-    case = db.query(Case).filter(Case.id == case_id).first()
+    case = db.query(Case).filter(Case.case_id == case_id).first()
     if not case:
         raise HTTPException(status_code=404, detail="Case not found")
     return case

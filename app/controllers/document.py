@@ -11,7 +11,7 @@ def create_document(db: Session, document: DocumentCreate):
     return db_document
 
 def get_document(db: Session, document_id: int):
-    document = db.query(Document).filter(Document.id == document_id).first()
+    document = db.query(Document).filter(Document.document_id == document_id).first()
     if not document:
         raise HTTPException(status_code=404, detail="Document not found")
     return document

@@ -11,7 +11,7 @@ def create_appointment(db: Session, appointment: AppointmentCreate):
     return db_appointment
 
 def get_appointment(db: Session, appointment_id: int):
-    appointment = db.query(Appointment).filter(Appointment.id == appointment_id).first()
+    appointment = db.query(Appointment).filter(Appointment.appointment_id == appointment_id).first()
     if not appointment:
         raise HTTPException(status_code=404, detail="Appointment not found")
     return appointment
