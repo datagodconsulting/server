@@ -1,10 +1,27 @@
-from app.models.advocate import Advocate
+from app.models.advocate import Advocate, Location
 from app.schemas.advocate import AdvocateCreate
 from sqlalchemy.orm import Session
 from fastapi import HTTPException
 
 def create_advocate(db: Session, advocate: AdvocateCreate):
-    db_advocate = Advocate(**advocate.dict())
+    db_location = Location(
+        city=advocate.city,
+        state=advocate.state,
+        pincode=advocate.pincode
+    )
+
+    db.add(db_location)
+    db.commit()
+    db.refresh(db_location)
+
+    db_advocate = Advocate(
+        user_id=advocate.user_id,
+        bar_council_id=advocate.bar_council_id,
+        specialization=advocate.specialization,
+        years_of_experience=advocate.years_of_experience,
+        location_id=db_location.location_id
+    )
+
     db.add(db_advocate)
     db.commit()
     db.refresh(db_advocate)

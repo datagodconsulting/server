@@ -59,7 +59,9 @@ def list_users(
                     "bar_council_id": advocate.bar_council_id,
                     "specialization": advocate.specialization,
                     "years_of_experience": advocate.years_of_experience,
-                    "location": advocate.location
+                    "city": advocate.location.city if advocate.location else None,
+                    "state": advocate.location.state if advocate.location else None,
+                    "pincode": advocate.location.pincode if advocate.location else None,
                 }
         elif user.role == "client":
             client = db.query(Client).filter(Client.user_id == user.user_id).first()
@@ -89,7 +91,6 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
 @router.post("/login")
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = authenticate_user(db, form_data.username, form_data.password)
-    print("USER", UserRead.from_orm(user))
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect email or password")
     access_token = create_access_token(data={"sub": user.email})
