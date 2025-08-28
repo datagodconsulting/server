@@ -9,5 +9,9 @@ class Advocate(Base):
     bar_council_id = Column(String(50))
     specialization = Column(String(100))
     years_of_experience = Column(Integer)
-    location = Column(String(100))
+    # FK to location
+    location_id = Column(Integer, ForeignKey("locations.location_id"), nullable=True)
+
+    # relationship
+    location = relationship("Location", backref="advocates")
     user = relationship('User') 
