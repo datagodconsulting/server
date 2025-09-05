@@ -10,6 +10,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from app.core.config import SECRET_KEY
 from typing import List, Optional
+from app.schemas.advocate import AdvocateBase 
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -53,14 +54,16 @@ def list_users(
         user_data = UserRead.from_orm(user).dict()
         if user.role == "advocate":
             advocate = db.query(Advocate).filter(Advocate.user_id == user.user_id).first()
+            # if advocate:
+            #     user_data["advocate"] = {
+            #         "advocate_id": advocate.advocate_id,
+            #         "bar_council_id": advocate.bar_council_id,
+            #         "specialization": advocate.specialization,
+            #         "years_of_experience": advocate.years_of_experience,
+            #         "location": advocate.location
+            #     }
             if advocate:
-                user_data["advocate"] = {
-                    "advocate_id": advocate.advocate_id,
-                    "bar_council_id": advocate.bar_council_id,
-                    "specialization": advocate.specialization,
-                    "years_of_experience": advocate.years_of_experience,
-                    "location": advocate.location
-                }
+                user_data["advocate"] = AdvocateBase.from_orm(advocate).dict()
         elif user.role == "client":
             client = db.query(Client).filter(Client.user_id == user.user_id).first()
             if client:

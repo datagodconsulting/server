@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
+from decimal import Decimal
 
 # ---- Location schema ----
 class LocationBase(BaseModel):
@@ -22,6 +23,13 @@ class AdvocateBase(BaseModel):
     bar_council_id: Optional[str] = None
     specialization: Optional[str] = None
     years_of_experience: Optional[int] = None
+    available_emergency: Optional[bool] = None
+    consultation_fee: Optional[Decimal] = None
+    profile_picture: Optional[str] = None
+    # education_details: Optional[str] = None
+    in_house_lawyer: Optional[bool] = None
+    class Config:
+        from_attributes = True  
 
 class AdvocateCreate(AdvocateBase):
     location: LocationCreate   # ✅ nested location object when creating
