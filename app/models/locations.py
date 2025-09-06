@@ -16,5 +16,5 @@ class Location(Base):
     longitude = Column(String, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    # # relationship with Advocate
-    # advocates = relationship("Advocate", back_populates="location")
+    # relationship with Advocate
+    advocates = relationship("Advocate", back_populates="location")

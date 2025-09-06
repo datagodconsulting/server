@@ -13,5 +13,5 @@ class Advocate(Base):
     location_id = Column(Integer, ForeignKey("locations.location_id"), nullable=True)
 
     # relationship
-    location = relationship("Location", backref="advocates")
+    location = relationship("Location", back_populates="advocates")
     user = relationship('User') 
